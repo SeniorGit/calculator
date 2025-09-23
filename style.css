@@ -26,7 +26,8 @@
     font-weight: bold;
     padding-right: 10px;
     padding-left: 10px;
-    overflow:hidden;
+    overflow: hidden;
+    word-break: break-all;
 }
 
 body {
@@ -50,12 +51,38 @@ button{
     border: none;
     box-shadow: none;
     outline: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
+
 button:hover{
     background-color: #004030 ;
+}
+
+button:active{
+    transform: scale(0.95);
 }
 
 .calculatorButton{
     display: flex;
     flex-direction: column-reverse;
+}
+
+.row{
+    display: flex;
+    justify-content:  center;
+}
+
+button[data-type="operator"]{
+    background-color: #2C4A34;
+}
+
+button[data-type="clear"], 
+button[data-type="delete"] {
+    background-color: #A52A2A;
+}
+
+button[data-type="clear"]:hover, 
+button[data-type="delete"]:hover {
+    background-color: #8B0000;
 }
