@@ -1,10 +1,10 @@
 const monitor = document.querySelector(".monitor");
 const btnNumber = document.querySelectorAll("button");
 const hasil = document.createElement("p");
-let firstNumber = 0;
-let secondNumber = 0;
+let firstNumber = null;
+let secondNumber = null;
 let currentInput = "";
-let operator ;
+let currentOperator = null;
 let waitingForSecondNumber = false;
 let shouldResetInput = false;
 
@@ -18,16 +18,18 @@ btnNumber.forEach((btn) => {
         const type = e.target.dataset.type;
         const value = e.target.dataset.value;
 
-        if(type==="clear"){
+        if(type === "clear"){
             clear();
-        }else if(type==="delete"){
+        } else if(type === "delete"){
             handleDelete();
-        }else if(type==="number"){
+        } else if(type === "number"){
             handleNumber(value);
-        }else if(type==="operator"){
-             handleOperator(operator);
-        }else if(type === "dot"){
+        } else if(type === "operator"){
+            handleOperator(value); 
+        } else if(type === "dot"){
             handleDecimal();
+        } else if(type === "equals") {
+            handleEquals();
         }
     });
 });
@@ -38,44 +40,49 @@ function handleNumber(value){
         currentInput = value;
         shouldResetInput = false;
         waitingForSecondNumber = false;
-    } else{
+    } else {
         currentInput += value;
     }
 
-    if(currentInput.length >12){
-        currentInput = currentInput.slice(0,12);
+    if(currentInput.length > 12){
+        currentInput = currentInput.slice(0, 12);
     }
     hasil.textContent = currentInput;
 }
 
-//handle clik operator
-function handleOperator(operator){
-    if(op === "="){
-        if(operator && firstNumber !== null && currentInput !== ""){
-            secondNumber = parseFloat(currentInput);
-            const result = calculate(firstNumber, secondNumber, operator);
-            displayResult(result);
-            firstNumber = result;
-            operator = null;
-            secondNumber = null;
-            shouldResetInput = true;
-        }
-        return
-    }
-
+//handle click operator
+function handleOperator(op){
+    if(currentInput === "" || currentInput === "0") return; 
+    
     if(firstNumber === null){
         firstNumber = parseFloat(currentInput);
-    } else if (operator && !waitingForSecondNumber){
+        currentOperator = op;
+        waitingForSecondNumber = true;
+        shouldResetInput = true;
+    } else if (!waitingForSecondNumber) {
+        handleEquals();
+        currentOperator = op;
+        waitingForSecondNumber = true;
+        shouldResetInput = true;
+    } else {
+        currentOperator = op;
+    }
+}
+
+//handle equals button
+function handleEquals(){
+    if(firstNumber !== null && currentOperator !== null && currentInput !== "" && !waitingForSecondNumber){
         secondNumber = parseFloat(currentInput);
-        const result = calculate(firstNumber, secondNumber, operator);
+        const result = calculate(firstNumber, secondNumber, currentOperator);
         displayResult(result);
         firstNumber = result;
+        currentOperator = null;
         secondNumber = null;
+        waitingForSecondNumber = false;
+        shouldResetInput = true;
     }
-    operator = op;
-    waitingForSecondNumber = true;
-    shouldResetInput = true;
 }
+
 // if user want using decimal
 function handleDecimal(){
     if(shouldResetInput || waitingForSecondNumber){
@@ -90,9 +97,9 @@ function handleDecimal(){
 
 //delete number
 function handleDelete(){
-    if(currentInput.length>1){
-        currentInput = currentInput.slice(0,-1);
-    } else{
+    if(currentInput.length > 1){
+        currentInput = currentInput.slice(0, -1);
+    } else {
         currentInput = "0";
     }
     hasil.textContent = currentInput;
@@ -102,27 +109,29 @@ function handleDelete(){
 function clear(){
     currentInput = "0";
     firstNumber = null;
-    operator = null;
+    currentOperator = null;
     secondNumber = null;
     waitingForSecondNumber = false;
     shouldResetInput = false;
     hasil.textContent = currentInput;
 }
+
 //displaying the result
-function displayResult(){
+function displayResult(result){
     if(result === Infinity || isNaN(result)){
         hasil.textContent = "Error";
-        currentInput = "0"
-    }else{
+        currentInput = "0";
+        firstNumber = null;
+        currentOperator = null;
+    } else {
         result = Math.round(result * 100000000) / 100000000;
-        hasil.textContent = result.toString().slice(0,12);
+        hasil.textContent = result.toString().slice(0, 12);
         currentInput = result.toString();
     }
 }
 
-
 // calculator operator
-function calculate(a,b,op){
+function calculate(a, b, op){
     switch (op){
         case "+":
             return a + b;
@@ -131,11 +140,11 @@ function calculate(a,b,op){
         case "*":
             return a * b;
         case "/":
-           if(b===0){
-            return NaN;
-           }
-           return a/b;
-        default: return "Error";
+            if(b === 0){
+                return NaN;
+            }
+            return a / b;
+        default: 
+            return "Error";
     }
 }
-
