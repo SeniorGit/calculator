@@ -1,88 +1,322 @@
-.container{
-    border: 3px solid #93DA97;
-    background-color: #5E936C;
-    align-items:center;
-    display: flex;
-    flex-direction: column;
-    width: 400px;
-    height: 500px;
-    justify-content:start;
-    border-radius: 10px;
-    padding: 10px;
+:root {
+    color-scheme: light;
+
+    --paper: #e9e6dd;
+    --housing: #d6d3c9;
+    --housing-edge: #a39f92;
+    --housing-highlight: rgb(255 255 255 / 0.55);
+
+    --ink: #1b1c1a;
+    --ink-muted: #4d4e47;
+
+    --lcd: #c4cdaa;
+    --lcd-shade: #a9b48d;
+    --lcd-ink: #1d2418;
+    --lcd-ink-muted: #3f4832;
+    --error: #8f2408;
+
+    --digit-face: #f3f1ea;
+    --digit-hover: #fbfaf6;
+    --digit-edge: #a19d90;
+
+    --function-face: #c0bcaf;
+    --function-hover: #cdc9bd;
+    --function-edge: #86826f;
+
+    --operator-face: #2d2f2c;
+    --operator-hover: #40433e;
+    --operator-edge: #0f100f;
+    --operator-ink: #f3f1ea;
+
+    --equals-face: #c73d13;
+    --equals-hover: #d84a1e;
+    --equals-edge: #7a2208;
+    --equals-ink: #ffffff;
+
+    --disabled-face: #d3d0c5;
+    --disabled-ink: #8a877a;
+
+    --font: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    --glyph-width: 0.62;
+    --value-max: 3rem;
+
+    --space-s: 0.5rem;
+    --space-m: 0.75rem;
+    --space-l: 1rem;
+    --key-height: 3.5rem;
+    --key-radius: 0.375rem;
+    --key-travel: 3px;
+    --device-width: 22rem;
 }
 
-.monitor{
-    border: solid 3px #3E5F44;
-    justify-content: end;
-    align-items: center;
-    display: flex;
-    width: 94%;
-    height: 15%;
-    border-radius: 10px;
-    background-color: #93DA97 ;
-    margin: 10px;
-    color: white;
-    font-size: 30px;
-    font-weight: bold;
-    padding-right: 10px;
-    padding-left: 10px;
-    overflow: hidden;
-    word-break: break-all;
+@media (min-height: 40em) {
+    :root { --key-height: clamp(3.5rem, 9.5vh, 4.5rem); }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: sans-serif;
-  background: #3E5F44;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0;
+    padding: var(--space-l);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-variant-numeric: tabular-nums;
 }
 
-button{
-    background-color: #3E5F44;
-    color: white;
-    border-radius: 10px;
-    width: 90px;
-    height: 70px;
-    margin: 2px;
-    font-size: 30px;
-    border: none;
-    box-shadow: none;
-    outline: none;
+.device {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    width: min(100%, var(--device-width));
+    padding: var(--space-l);
+    background: var(--housing);
+    border: 1px solid var(--housing-edge);
+    border-radius: 0.75rem;
+    box-shadow: inset 0 1px 0 var(--housing-highlight);
+}
+
+.plate {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: var(--space-s);
+    border-bottom: 1px solid var(--housing-edge);
+    color: var(--ink-muted);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.plate__name {
+    margin: 0;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+}
+
+.plate__spec {
+    margin: 0;
+}
+
+.display {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-s);
+    min-height: 8.5rem;
+    padding: var(--space-m) var(--space-l);
+    background: var(--lcd);
+    color: var(--lcd-ink);
+    border-radius: 0.375rem;
+    box-shadow:
+        inset 0 2px 0 var(--lcd-shade),
+        inset 0 0 0 1px rgb(0 0 0 / 0.22);
+}
+
+.display__note {
+    min-height: 1.25rem;
+    margin: 0;
+    overflow: hidden;
+    color: var(--lcd-ink-muted);
+    font-size: clamp(0.6875rem, calc(100cqw / (var(--note-chars, 1) * var(--glyph-width))), 0.875rem);
+    line-height: 1.25rem;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.display__note--error {
+    color: var(--error);
+    font-weight: 700;
+}
+
+.display__value {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    height: calc(var(--value-max) * 1.1);
+    overflow: hidden;
+    font-size: 2rem;
+    font-size: min(var(--value-max), calc(100cqw / (var(--chars, 8) * var(--glyph-width))));
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.display.is-error .display__value {
+    color: var(--error);
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: var(--key-height);
+    gap: var(--space-m) var(--space-s);
+}
+
+.key {
+    --face: var(--digit-face);
+    --face-hover: var(--digit-hover);
+    --edge: var(--digit-edge);
+    --label: var(--ink);
+
+    min-width: 0;
+    padding: 0;
+    background: var(--face);
+    color: var(--label);
+    border: 0;
+    border-radius: var(--key-radius);
+    box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.4),
+        0 var(--key-travel) 0 var(--edge);
     cursor: pointer;
-    transition: background-color 0.2s;
+    font: inherit;
+    font-size: 1.5rem;
+    font-weight: 500;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        transform 60ms ease-out,
+        box-shadow 60ms ease-out,
+        background-color 120ms ease-out;
 }
 
-button:hover{
-    background-color: #004030 ;
+.key--wide {
+    grid-column: span 2;
 }
 
-button:active{
-    transform: scale(0.95);
+.key--function {
+    --face: var(--function-face);
+    --face-hover: var(--function-hover);
+    --edge: var(--function-edge);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
 }
 
-.calculatorButton{
-    display: flex;
-    flex-direction: column-reverse;
+.key--operator {
+    --face: var(--operator-face);
+    --face-hover: var(--operator-hover);
+    --edge: var(--operator-edge);
+    --label: var(--operator-ink);
+    font-size: 1.75rem;
+    font-weight: 400;
 }
 
-.row{
-    display: flex;
-    justify-content:  center;
+.key--equals {
+    --face: var(--equals-face);
+    --face-hover: var(--equals-hover);
+    --edge: var(--equals-edge);
+    --label: var(--equals-ink);
+    font-size: 1.75rem;
 }
 
-button[data-type="operator"]{
-    background-color: #2C4A34;
+@media (hover: hover) {
+    .key:hover {
+        background: var(--face-hover);
+    }
 }
 
-button[data-type="clear"], 
-button[data-type="delete"] {
-    background-color: #A52A2A;
+.key:active,
+.key.is-pressed {
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.4), 0 0 0 var(--edge);
+    transform: translateY(var(--key-travel));
 }
 
-button[data-type="clear"]:hover, 
-button[data-type="delete"]:hover {
-    background-color: #8B0000;
+.key:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+}
+
+.key[aria-disabled="true"] {
+    --face: var(--disabled-face);
+    --face-hover: var(--disabled-face);
+    --label: var(--disabled-ink);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1);
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 30em) {
+    :root {
+        --value-max: 3.5rem;
+    }
+
+    body {
+        padding: 0;
+        place-items: stretch;
+    }
+
+    .device {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding:
+            max(var(--space-l), env(safe-area-inset-top))
+            max(var(--space-m), env(safe-area-inset-right))
+            max(var(--space-l), env(safe-area-inset-bottom))
+            max(var(--space-m), env(safe-area-inset-left));
+        border: 0;
+        border-radius: 0;
+    }
+
+    .display {
+        flex: 1;
+    }
+}
+
+@media (max-height: 30em) {
+    :root {
+        --key-height: 2.75rem;
+        --value-max: 2.5rem;
+    }
+
+    .plate {
+        display: none;
+    }
+
+    .display {
+        min-height: 5.5rem;
+    }
+}
+
+@media (min-width: 48em) {
+    html { font-size: 112.5%; }
+}
+
+@media (min-width: 90em) {
+    html { font-size: 125%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .key {
+        transition: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .key,
+    .display {
+        border: 1px solid ButtonText;
+    }
+
+    .key[aria-disabled="true"] {
+        border-color: GrayText;
+        color: GrayText;
+    }
 }
