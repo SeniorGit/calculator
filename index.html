@@ -2,49 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="A 12-digit desk calculator built with plain HTML, CSS and JavaScript.">
+    <meta name="theme-color" content="#d6d3c9">
     <title>Calculator</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23c73d13'/%3E%3Cpath d='M9 12h14M9 20h14' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="monitor"></div>
-        <div class="calculatorButton">
-            <div class="clear"></div>
-                <div class="number">
-                    <div class="row">
-                        <button class="operator" data-type="clear" data-value="CE/C">CE/C</button>
-                        <button class="operator" data-type="delete" data-value="Del">Del</button>
-                    </div>
-                    <div class="row">
-                        <button class="picknumber" data-type="number" data-value="7">7</button>
-                        <button class="picknumber" data-type="number" data-value="8">8</button>
-                        <button class="picknumber" data-type="number" data-value="9">9</button>
-                        <button class="operator" data-type="operator" data-value="/">/</button>
-                    </div>
-                    <div class="row">
-                        <button class="picknumber" data-type="number" data-value="4">4</button>
-                        <button class="picknumber" data-type="number" data-value="5">5</button>
-                        <button class="picknumber" data-type="number" data-value="6">6</button>
-                        <button class="operator" data-type="operator" data-value="*">×</button> <!-- Changed X to * -->
-                    </div>
-                    <div class="row">
-                        <button class="picknumber" data-type="number" data-value="1">1</button>
-                        <button class="picknumber" data-type="number" data-value="2">2</button>
-                        <button class="picknumber" data-type="number" data-value="3">3</button>
-                        <button class="operator" data-type="operator" data-value="-">-</button>
-                    </div>
-                    <div class="row">
-                        <button class="picknumber" data-type="number" data-value="0">0</button>
-                        <button class="operator" data-type="dot" data-value=".">.</button>
-                        <button class="operator" data-type="operator" data-value="=">=</button>
-                        <button class="operator" data-type="operator" data-value="+">+</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="main.js" defer></script>
+    <main class="device">
+        <header class="plate">
+            <h1 class="plate__name">Calculator</h1>
+            <p class="plate__spec">12 digit</p>
+        </header>
 
+        <section class="display" aria-label="Display">
+            <p class="display__note" id="history"></p>
+            <p class="display__note display__note--error" id="message" role="alert" hidden></p>
+            <output class="display__value" id="value" aria-live="polite" aria-atomic="true">0</output>
+        </section>
+
+        <section class="keypad" aria-label="Keypad">
+            <button class="key key--function key--wide" type="button" data-action="clear" data-key="Escape" aria-keyshortcuts="Escape" aria-label="AC, all clear">AC</button>
+            <button class="key key--function key--wide" type="button" data-action="delete" data-key="Backspace" aria-keyshortcuts="Backspace" aria-label="Delete last digit">DEL</button>
+
+            <button class="key key--digit" type="button" data-digit="7" data-key="7">7</button>
+            <button class="key key--digit" type="button" data-digit="8" data-key="8">8</button>
+            <button class="key key--digit" type="button" data-digit="9" data-key="9">9</button>
+            <button class="key key--operator" type="button" data-operator="/" data-key="/" aria-keyshortcuts="/" aria-label="divide">&divide;</button>
+
+            <button class="key key--digit" type="button" data-digit="4" data-key="4">4</button>
+            <button class="key key--digit" type="button" data-digit="5" data-key="5">5</button>
+            <button class="key key--digit" type="button" data-digit="6" data-key="6">6</button>
+            <button class="key key--operator" type="button" data-operator="*" data-key="*" aria-keyshortcuts="*" aria-label="multiply">&times;</button>
+
+            <button class="key key--digit" type="button" data-digit="1" data-key="1">1</button>
+            <button class="key key--digit" type="button" data-digit="2" data-key="2">2</button>
+            <button class="key key--digit" type="button" data-digit="3" data-key="3">3</button>
+            <button class="key key--operator" type="button" data-operator="-" data-key="-" aria-keyshortcuts="-" aria-label="subtract">&minus;</button>
+
+            <button class="key key--digit" type="button" data-digit="0" data-key="0">0</button>
+            <button class="key key--digit" type="button" data-action="decimal" data-key="." aria-keyshortcuts="." aria-label="decimal point">.</button>
+            <button class="key key--equals" type="button" data-action="equals" data-key="Enter" aria-keyshortcuts="Enter" aria-label="equals">=</button>
+            <button class="key key--operator" type="button" data-operator="+" data-key="+" aria-keyshortcuts="+" aria-label="add">+</button>
+        </section>
+    </main>
+
+    <script src="main.js" defer></script>
 </body>
 </html>
